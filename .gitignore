@@ -222,6 +222,5 @@ __marimo__/
 
 Design_patterns/
 Test_Code/
-data/
-raw/*
-logs/
+/data
+/logs
