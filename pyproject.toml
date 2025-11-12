@@ -5,23 +5,20 @@ description = "MLOPS project using nltk and machine learning"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "dask[complete,dataframe]>=2025.10.0",
     "datasets>=4.2.0",
     "dvc>=3.63.0",
-    "fastapi>=0.119.0",
-    "gensim>=4.3.3",
-    "mlflow>=3.4.0",
+    "ipykernel>=7.1.0",
+    "matplotlib>=3.10.7",
     "nltk>=3.9.2",
     "numpy>=1.26.4",
     "pandas>=2.3.3",
-    "plotly>=6.3.1",
     "pydantic>=2.12.1",
     "pyyaml>=6.0.3",
+    "rich>=14.2.0",
     "scikit-learn>=1.7.2",
-    "seaborn>=0.13.2",
-    "spacy>=3.8.7",
-    "torch>=2.8.0",
     "uvicorn>=0.37.0",
+    "wordcloud>=1.9.4",
+    "xgboost>=3.1.1",
 ]
 
 [tool.setuptools.packages.find]
