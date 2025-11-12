@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
 from src.logger.logger import setup_logger
+from src.utility.load_yaml import read_yaml
 
 logger = setup_logger("feature_engineering")
 
@@ -31,7 +32,7 @@ def apply_tfidf(train_data: pd.DataFrame,test_data : pd.DataFrame,max_features:i
         y_train , y_test = train_data['target'].values,test_data['target'].values
 
         x_train_vec = vectorizer.fit_transform(x_train)
-        x_test_vec = vectorizer.fit_transform(x_test)
+        x_test_vec = vectorizer.transform(x_test)
 
         train_df = pd.DataFrame(x_train_vec.toarray())
         train_df['label'] = y_train
@@ -61,7 +62,9 @@ def save_data(df:pd.DataFrame,file_path:str) -> None:
 
 def main():
     try:
-        max_features = 50
+        params = read_yaml(file_path='./params.yaml')
+        max_features = params['feature_engineering']['max_features']
+        # max_features = 50
 
         train_data = fill_nulls_data('./data/interim/train_processed.csv')
         logger.debug("train data nulls removed")

@@ -2,6 +2,7 @@ import logging
 from src.logger.logger import setup_logger
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from src.utility.load_yaml import read_yaml
 
 logger = setup_logger("Data Loader")
 def load_data(data_url : str) -> pd.DataFrame:
@@ -67,7 +68,9 @@ def save_date(train_data : pd.DataFrame, test_data : pd.DataFrame,data_path : st
     
 def main():
     try:
-        test_size = 0.2
+        params = read_yaml('./params.yaml')
+        test_size = params['data_ingestion']['test_size']
+        #test_size = 0.2
         data_path = r"C:\Users\Vagis\Downloads\spam.csv"
         df = load_data(data_url=data_path)
         

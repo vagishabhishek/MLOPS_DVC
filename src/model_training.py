@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import pickle
 from sklearn.ensemble import RandomForestClassifier
+from src.utility.load_yaml import read_yaml
 
 logger = setup_logger('model-trainer')
 
@@ -63,10 +64,12 @@ def save_model(model,file_path:str)->None:
 
 def main():
     try:
-        params = {
-            'n_estimators' : 25,
-            'random_state' : 2            
-            }
+        params = read_yaml(file_path="./params.yaml")
+        params = params['model_training']
+        # params = {
+        #     'n_estimators' : 25,
+        #     'random_state' : 2            
+        #     }
         
         train_data = load_data('./data/processed/train_tfidf.csv')
 
@@ -78,7 +81,7 @@ def main():
         model_save_path = 'models/model.pkl'
         save_model(clf,model_save_path)
     except Exception as e:
-        logger.error(f'Failed to complete the model building process {e}')
+        logger.error(f'Failed to complete the model building process {e}',exc_info=True)
         raise
 
 if __name__ == "__main__":
