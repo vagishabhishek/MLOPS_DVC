@@ -6,6 +6,8 @@ from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_
 from pathlib import Path
 import json
 from src.utility.load_yaml import read_yaml
+from dvclive import Live
+import yaml
 
 
 logger = setup_logger("model-evaluater")
@@ -39,11 +41,19 @@ def load_data(file_path:str)->pd.DataFrame:
         logger.error(f"Some error occurred {e}")
         raise
 
-def evaluate_model(clf,x_test:np.ndarray,y_test:np.ndarray)->dict:
+def evaluate_model(clf,x_test:np.ndarray,y_test:np.ndarray,params:dict)->dict:
     try:
 
         y_pred = clf.predict(x_test)
-        y_pred_proba = clf.predict(x_test)
+        y_pred_proba = clf.predict(x_test)[:,1]
+
+        with Live(save_dvc_exp = True) as live:
+            live.log_metric('accuracy',accuracy_score(y_test,y_pred))
+            live.log_metric('precision',precision_score(y_test,y_pred))
+            live.log_metric('recall',recall_score(y_test,y_pred))
+            live.log_metric('roc_auc_core',roc_auc_score(y_test,y_pred))
+            live.log_params(params)
+
 
         accuracy = accuracy_score(y_test,y_pred)
         precision = precision_score(y_test,y_pred)
@@ -78,13 +88,14 @@ def save_metrics(metrics:dict, file_path : str) ->None:
         raise
 def main():
     try:
+        params = read_yaml('./params.yaml')
         clf = load_model('./models/model.pkl')
         test_data = load_data('./data/processed/test_tfidf.csv')
 
         x_test = test_data.iloc[:,:-1].values
         y_test = test_data.iloc[:,-1].values
 
-        metrics = evaluate_model(clf,x_test,y_test)
+        metrics = evaluate_model(clf,x_test,y_test,params=params)
         save_metrics(metrics,'reports/metrics.json')
     
     except Exception as e:
