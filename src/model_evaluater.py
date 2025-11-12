@@ -59,7 +59,7 @@ def evaluate_model(clf,x_test:np.ndarray,y_test:np.ndarray)->dict:
         return metrics_dict
     
     except Exception as e:
-        logger.error('Error during model evaluation {e}')
+        logger.error(f'Error during model evaluation {e}')
         raise
 
 def save_metrics(metrics:dict, file_path : str) ->None:
